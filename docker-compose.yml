@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  mariadb:
+    tty: true
+    build:
+      context: ./mariadb
+      dockerfile: Dockerfile
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MARIADB_DATABASE}
+      - MYSQL_USER=${MARIADB_USER}
+      - MYSQL_PASSWORD=${MARIADB_PASSWORD}
+    volumes:
+      - ./mariadb/.data:/var/lib/mysql
+    networks:
+      - backend
+    ports:
+      - ${MARIADB_PORT}:3306
+
