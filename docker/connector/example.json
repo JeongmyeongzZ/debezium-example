@@ -1,0 +1,28 @@
+{
+  "name": "order14",
+  "config": {
+    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+    "tasks.max": "1",
+    "database.hostname": "",
+    "database.port": "3306",
+    "database.user": "",
+    "database.password": "",
+    "database.allowPublicKeyRetrieval": "true",
+    "database.server.name": "ORDER-CONNECTOR",
+    "database.include.list": "ORDER",
+    "database.history.store.only.captured.tables.ddl": "false",
+    "database.history.skip.unparseable.ddl": "true",
+    "database.history.kafka.bootstrap.servers": "",
+    "database.history.kafka.topic": "CDC-ORDER-CONNECTOR-SCHEMA",
+    "table.include.list": "ORDER.test",
+    "include.schema.changes": "false",
+    "snapshot.mode": "schema_only",
+    "snapshot.locking.mode": "none",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "transforms": "unwrap",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.drop.tombstones": "false"
+  }
+}
