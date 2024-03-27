@@ -1,20 +1,31 @@
 version: '3'
 
 services:
-  mariadb:
-    tty: true
-    build:
-      context: ./mariadb
-      dockerfile: Dockerfile
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MARIADB_DATABASE}
-      - MYSQL_USER=${MARIADB_USER}
-      - MYSQL_PASSWORD=${MARIADB_PASSWORD}
-    volumes:
-      - ./mariadb/.data:/var/lib/mysql
-    networks:
-      - backend
+  debezium:
+    image: debezium/connect:latest
+    platform: linux/amd64
+    restart: always
+    container_name: debezium
+    hostname: debezium
     ports:
-      - ${MARIADB_PORT}:3306
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: ${BOOTSTRAP_SERVERS}
+      GROUP_ID: ${GROUP_ID}
+      CONFIG_STORAGE_TOPIC: ${CONFIG_STORAGE_TOPIC}
+      OFFSET_STORAGE_TOPIC: ${OFFSET_STORAGE_TOPIC}
+      STATUS_STORAGE_TOPIC: ${STATUS_STORAGE_TOPIC}
+    volumes:
+      - ./connector:/kafka/connect
 
+  debezium-ui:
+    image: debezium/debezium-ui:latest
+    platform: linux/amd64
+    restart: always
+    container_name: debezium-ui
+    hostname: debezium-ui
+    depends_on: [debezium]
+    ports:
+      - '8080:8080'
+    environment:
+      KAFKA_CONNECT_URIS: http://debezium:8083
